@@ -57,7 +57,7 @@
   <script>
     const googleSheetURL = "https://script.google.com/macros/s/AKfycbwJ0_YG2WlkDFQK7MAFwdb5K0h9OJxGMHOJ6xNFHruvkdvSv92gJxh43FTgiOdLZzrO/exec";
 
-    let expenses = JSON.parse(localStorage.getItem('ktx_expenses')) || [];
+    let expenses = [];
 
     const formatMoney = (amount) => new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
 
@@ -66,6 +66,28 @@
       const shared = (e.room + e.electricity + e.water) / 2;
       return { tuan: wifiPerPerson + shared, thai: wifiPerPerson + shared };
     };
+
+    async function loadFromGoogleSheet() {
+      try {
+        const res = await fetch(googleSheetURL);
+        const data = await res.json();
+
+        expenses = data.map(row => ({
+          month: row.month,
+          room: +row.room,
+          electricity: +row.electricity,
+          water: +row.water,
+          wifi: +row.wifi,
+          paidTuan: +row.paidTuan || 0,
+          paidThai: +row.paidThai || 0,
+          ktxConfirmed: row.ktxConfirmed === "true"
+        }));
+
+        renderExpenses();
+      } catch (err) {
+        console.error("❌ Lỗi khi tải dữ liệu từ Google Sheets:", err);
+      }
+    }
 
     function sendToGoogleSheet(data) {
       fetch(googleSheetURL, {
@@ -132,32 +154,28 @@
         ktxConfirmed: false
       };
       expenses.push(newE);
-      localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
       sendToGoogleSheet(newE);
-      e.target.reset();
       renderExpenses();
+      e.target.reset();
     });
 
     function addPayment(index, who) {
       const amount = prompt(`Nhập số tiền ${who === 'tuan' ? 'Tuấn' : 'Thái'} đã trả thêm:`);
       const num = parseInt(amount);
       if (!isNaN(num)) {
-        expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] = (expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] || 0) + num;
-        localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
+        expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] += num;
         renderExpenses();
       }
     }
 
     function toggleKtxPaid(index, checked) {
       expenses[index].ktxConfirmed = checked;
-      localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
       renderExpenses();
     }
 
     function deleteExpense(index) {
       if (confirm('Xóa chi phí này?')) {
         expenses.splice(index, 1);
-        localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
         renderExpenses();
       }
     }
@@ -205,7 +223,7 @@
       XLSX.writeFile(wb, "TongHop_ChiPhi_KTX.xlsx");
     }
 
-    renderExpenses();
+    loadFromGoogleSheet();
   </script>
 </body>
 </html>
