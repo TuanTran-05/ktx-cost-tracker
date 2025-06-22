@@ -55,75 +55,77 @@
   </div>
 
   <script>
-    const googleSheetURL = "https://script.google.com/macros/s/AKfycbwJ0_YG2WlkDFQK7MAFwdb5K0h9OJxGMHOJ6xNFHruvkdvSv92gJxh43FTgiOdLZzrO/exec";
+    const expenses = [];
 
-    let expenses = [];
-
-    const formatMoney = (amount) => new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+    const formatMoney = (amount) =>
+      new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
 
     const calculateShares = (e) => {
       const wifiPerPerson = e.wifi / 6;
       const shared = (e.room + e.electricity + e.water) / 2;
-      return { tuan: wifiPerPerson + shared, thai: wifiPerPerson + shared };
+      return {
+        tuan: wifiPerPerson + shared,
+        thai: wifiPerPerson + shared,
+      };
     };
 
-    async function loadFromGoogleSheet() {
-      try {
-        const res = await fetch(googleSheetURL);
-        const data = await res.json();
-
-        expenses = data.map(row => ({
-          month: row.month,
-          room: +row.room,
-          electricity: +row.electricity,
-          water: +row.water,
-          wifi: +row.wifi,
-          paidTuan: +row.paidTuan || 0,
-          paidThai: +row.paidThai || 0,
-          ktxConfirmed: row.ktxConfirmed === "true"
-        }));
-
-        renderExpenses();
-      } catch (err) {
-        console.error("❌ Lỗi khi tải dữ liệu từ Google Sheets:", err);
-      }
+    function saveToLocal() {
+      localStorage.setItem("ktxExpenses", JSON.stringify(expenses));
     }
 
-    function sendToGoogleSheet(data) {
-      fetch(googleSheetURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      })
-      .then(res => res.text())
-      .then(msg => console.log("✅ Đã gửi Google Sheet:", msg))
-      .catch(err => console.error("❌ Lỗi gửi Google Sheet:", err));
-    }
-
-    function addPayment(index, who) {
-      const amount = prompt(`Nhập số tiền ${who === 'tuan' ? 'Tuấn' : 'Thái'} đã trả thêm:`);
-      const num = parseInt(amount);
-      if (!isNaN(num)) {
-        expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] += num;
-        sendToGoogleSheet(expenses[index]);
+    function loadFromLocal() {
+      const data = localStorage.getItem("ktxExpenses");
+      if (data) {
+        expenses.push(...JSON.parse(data));
         renderExpenses();
       }
     }
 
-    function toggleKtxPaid(index, checked) {
-      expenses[index].ktxConfirmed = checked;
-      sendToGoogleSheet(expenses[index]);
-      renderExpenses();
-    }
+    const renderExpenses = () => {
+      const list = document.getElementById('expense-list');
+      list.innerHTML = '';
 
-    function deleteExpense(index) {
-      if (confirm('Xóa chi phí này?')) {
-        expenses.splice(index, 1);
-        renderExpenses();
-      }
-    }
+      expenses.forEach((e, i) => {
+        const total = e.room + e.electricity + e.water + e.wifi;
+        const share = calculateShares(e);
+        const debtTuan = e.paidTuan - share.tuan;
+        const debtThai = e.paidThai - share.thai;
 
-    // phần renderExpenses và export giữ nguyên
+        const tuanStatus =
+          debtTuan === 0
+            ? '✅'
+            : debtTuan > 0
+            ? `Dư ${formatMoney(debtTuan)}`
+            : `Nợ ${formatMoney(-debtTuan)}`;
+
+        const thaiStatus =
+          debtThai === 0
+            ? '✅'
+            : debtThai > 0
+            ? `Dư ${formatMoney(debtThai)}`
+            : `Nợ ${formatMoney(-debtThai)}`;
+
+        const isKtxPaid = debtTuan >= 0 && debtThai >= 0;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="px-4 py-2">${e.month}</td>
+          <td class="px-4 py-2">${formatMoney(total)}</td>
+          <td class="px-4 py-2">${formatMoney(share.tuan)}</td>
+          <td class="px-4 py-2">${formatMoney(e.paidTuan)}</td>
+          <td class="px-4 py-2">${tuanStatus}</td>
+          <td class="px-4 py-2">${formatMoney(share.thai)}</td>
+          <td class="px-4 py-2">${formatMoney(e.paidThai)}</td>
+          <td class="px-4 py-2">${thaiStatus}</td>
+          <td class="px-4 py-2">${isKtxPaid ? '✅' : '❌'}</td>
+          <td class="px-4 py-2 text-xs space-y-1">
+            <button onclick="addPayment(${i}, 'tuan')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">+ Tuấn</button>
+            <button onclick="addPayment(${i}, 'thai')" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded">+ Thái</button>
+          </td>
+        `;
+        list.appendChild(tr);
+      });
+    };
 
     document.getElementById('expense-form').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -135,15 +137,46 @@
         wifi: +document.getElementById('wifi').value || 0,
         paidTuan: 0,
         paidThai: 0,
-        ktxConfirmed: false
+        ktxConfirmed: false,
       };
       expenses.push(newE);
-      sendToGoogleSheet(newE);
+      saveToLocal();
       renderExpenses();
       e.target.reset();
     });
 
-    loadFromGoogleSheet();
+    function addPayment(index, who) {
+      const amount = prompt(`Nhập số tiền ${who === 'tuan' ? 'Tuấn' : 'Thái'} đã trả thêm:`);
+      const num = parseInt(amount);
+      if (!isNaN(num)) {
+        expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] += num;
+        saveToLocal();
+        renderExpenses();
+      }
+    }
+
+    function exportAll() {
+      const data = expenses.map(e => {
+        const share = calculateShares(e);
+        return {
+          "Tháng": e.month,
+          "Phòng": e.room,
+          "Điện": e.electricity,
+          "Nước": e.water,
+          "Wifi": e.wifi,
+          "Tuấn phải trả": share.tuan,
+          "Tuấn đã trả": e.paidTuan,
+          "Thái phải trả": share.thai,
+          "Thái đã trả": e.paidThai
+        };
+      });
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Tất cả các tháng");
+      XLSX.writeFile(wb, "TongHop_ChiPhi_KTX.xlsx");
+    }
+
+    loadFromLocal();
   </script>
 </body>
 </html>
