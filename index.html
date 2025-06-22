@@ -3,44 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chi phí KTX - Phòng A3-5-5-10</title>
+  <title>Chi phí KTX - A3-5-5-10</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
-<body class="bg-gradient-to-tr from-blue-50 via-purple-50 to-gray-100 min-h-screen font-sans">
-  <div class="max-w-7xl mx-auto px-4 py-8">
-    <header class="mb-10 text-center">
-      <h1 class="text-4xl font-bold text-indigo-700 mb-2">Quản lý chi phí KTX</h1>
-      <p class="text-lg text-gray-600">Phòng <span class="font-semibold">A3-5-5-10</span> - Trường ĐH Quốc tế Miền Đông</p>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen text-gray-800">
+  <div class="max-w-6xl mx-auto p-6">
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-bold text-indigo-700 mb-2">Chi phí KTX - A3-5-5-10</h1>
+      <h2 class="text-xl text-gray-600">Ký túc xá Trường Đại học Quốc tế Miền Đông</h2>
     </header>
 
-    <section class="bg-white shadow-lg rounded-xl p-6 mb-12">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Thêm chi phí tháng</h2>
+    <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+      <h3 class="text-2xl font-semibold mb-4 text-gray-800">➕ Thêm chi phí</h3>
       <form id="expense-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-        <input type="month" id="month" class="col-span-2 px-4 py-2 border rounded-md" required />
-        <input type="number" id="room" placeholder="Phòng" class="px-4 py-2 border rounded-md" min="0" />
-        <input type="number" id="electricity" placeholder="Điện" class="px-4 py-2 border rounded-md" min="0" />
-        <input type="number" id="water" placeholder="Nước" class="px-4 py-2 border rounded-md" min="0" />
-        <input type="number" id="wifi" placeholder="Wifi" class="px-4 py-2 border rounded-md" min="0" />
-        <button type="submit" class="col-span-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700">+ Thêm</button>
+        <input type="month" id="month" class="col-span-2 px-3 py-2 border border-gray-300 rounded-md" required />
+        <input type="number" id="room" placeholder="Phòng" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
+        <input type="number" id="electricity" placeholder="Điện" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
+        <input type="number" id="water" placeholder="Nước" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
+        <input type="number" id="wifi" placeholder="Wifi" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
+        <button type="submit" class="col-span-2 lg:col-span-6 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Thêm chi phí</button>
       </form>
     </section>
 
-    <section class="bg-white shadow-lg rounded-xl p-6">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Chi tiết & Lịch sử</h2>
+    <section class="bg-white rounded-xl shadow-md p-6">
+      <h3 class="text-2xl font-semibold mb-4">📜 Lịch sử chi phí</h3>
       <div class="overflow-x-auto">
-        <table class="min-w-full text-sm text-left">
-          <thead class="bg-indigo-50">
+        <table class="min-w-full text-sm">
+          <thead class="bg-gray-50">
             <tr>
               <th class="px-4 py-2">Tháng</th>
               <th class="px-4 py-2">Tổng</th>
-              <th class="px-4 py-2">Tuấn cần trả</th>
+              <th class="px-4 py-2">Tuấn phải trả</th>
               <th class="px-4 py-2">Tuấn đã trả</th>
-              <th class="px-4 py-2">Trạng thái Tuấn</th>
-              <th class="px-4 py-2">Thái cần trả</th>
+              <th class="px-4 py-2">Tuấn trạng thái</th>
+              <th class="px-4 py-2">Thái phải trả</th>
               <th class="px-4 py-2">Thái đã trả</th>
-              <th class="px-4 py-2">Trạng thái Thái</th>
-              <th class="px-4 py-2">KTX</th>
+              <th class="px-4 py-2">Thái trạng thái</th>
+              <th class="px-4 py-2">Đóng KTX</th>
               <th class="px-4 py-2">Hành động</th>
             </tr>
           </thead>
@@ -49,22 +49,14 @@
       </div>
     </section>
 
-    <div class="mt-6">
+    <div class="mt-6 text-right">
       <button onclick="exportAll()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">📁 Xuất toàn bộ chi phí</button>
-    </div>
-
-    <div id="detail-modal" class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center z-50">
-      <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full">
-        <h3 class="text-xl font-semibold mb-4">Chi tiết chi phí</h3>
-        <ul id="detail-list" class="text-sm text-gray-700 space-y-2"></ul>
-        <div class="text-right mt-6">
-          <button onclick="closeDetail()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Đóng</button>
-        </div>
-      </div>
     </div>
   </div>
 
   <script>
+    const googleSheetURL = "https://script.google.com/macros/s/AKfycbwJ0_YG2WlkDFQK7MAFwdb5K0h9OJxGMHOJ6xNFHruvkdvSv92gJxh43FTgiOdLZzrO/exec";
+
     let expenses = JSON.parse(localStorage.getItem('ktx_expenses')) || [];
 
     const formatMoney = (amount) => new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
@@ -72,54 +64,34 @@
     const calculateShares = (e) => {
       const wifiPerPerson = e.wifi / 6;
       const shared = (e.room + e.electricity + e.water) / 2;
-      const extras = (e.extras || []).reduce((sum, item) => sum + item.amount, 0) / 2;
-      return {
-        tuan: wifiPerPerson + shared + extras,
-        thai: wifiPerPerson + shared + extras,
-        breakdown: [
-          { label: 'Phòng', amount: e.room / 2 },
-          { label: 'Điện', amount: e.electricity / 2 },
-          { label: 'Nước', amount: e.water / 2 },
-          { label: 'Wifi (1/6)', amount: wifiPerPerson },
-          ...((e.extras || []).map(item => ({ label: item.name, amount: item.amount / 2 })))
-        ]
-      };
+      return { tuan: wifiPerPerson + shared, thai: wifiPerPerson + shared };
     };
 
-    function showDetail(index, who) {
-      const detail = document.getElementById('detail-modal');
-      const list = document.getElementById('detail-list');
-      const shares = calculateShares(expenses[index]);
-      list.innerHTML = '';
-      shares.breakdown.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.label}: ${formatMoney(item.amount)}`;
-        list.appendChild(li);
-      });
-      detail.classList.remove('hidden');
-      detail.classList.add('flex');
+    function sendToGoogleSheet(data) {
+      fetch(googleSheetURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.text())
+      .then(msg => console.log("✅ Đã gửi Google Sheet:", msg))
+      .catch(err => console.error("❌ Lỗi gửi Google Sheet:", err));
     }
 
-    function closeDetail() {
-      const modal = document.getElementById('detail-modal');
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    }
-
-    function renderExpenses() {
+    const renderExpenses = () => {
       const list = document.getElementById('expense-list');
       list.innerHTML = '';
 
       expenses.forEach((e, i) => {
-        const total = e.room + e.electricity + e.water + e.wifi + (e.extras || []).reduce((sum, item) => sum + item.amount, 0);
+        const total = e.room + e.electricity + e.water + e.wifi;
         const share = calculateShares(e);
         const paidTuan = e.paidTuan || 0;
         const paidThai = e.paidThai || 0;
         const debtTuan = paidTuan - share.tuan;
         const debtThai = paidThai - share.thai;
 
-        const tuanStatus = debtTuan === 0 ? 'Đã thanh toán đủ' : (debtTuan > 0 ? `Dư: ${formatMoney(debtTuan)}` : `Còn nợ: ${formatMoney(-debtTuan)}`);
-        const thaiStatus = debtThai === 0 ? 'Đã thanh toán đủ' : (debtThai > 0 ? `Dư: ${formatMoney(debtThai)}` : `Còn nợ: ${formatMoney(-debtThai)}`);
+        const tuanStatus = debtTuan === 0 ? '✅' : (debtTuan > 0 ? `Dư ${formatMoney(debtTuan)}` : `Nợ ${formatMoney(-debtTuan)}`);
+        const thaiStatus = debtThai === 0 ? '✅' : (debtThai > 0 ? `Dư ${formatMoney(debtThai)}` : `Nợ ${formatMoney(-debtThai)}`);
 
         const isKtxPaid = debtTuan >= 0 && debtThai >= 0;
 
@@ -127,95 +99,50 @@
         tr.innerHTML = `
           <td class="px-4 py-2">${e.month}</td>
           <td class="px-4 py-2">${formatMoney(total)}</td>
-          <td class="px-4 py-2 text-blue-700 cursor-pointer underline" onclick="showDetail(${i}, 'tuan')">${formatMoney(share.tuan)}</td>
+          <td class="px-4 py-2 text-blue-700 cursor-pointer underline" onclick="alert('Phòng: ${formatMoney(e.room)}\nĐiện: ${formatMoney(e.electricity)}\nNước: ${formatMoney(e.water)}\nWifi: ${formatMoney(e.wifi)}\n\nTổng chia Tuấn: ${formatMoney(share.tuan)}')">${formatMoney(share.tuan)}</td>
           <td class="px-4 py-2">${formatMoney(paidTuan)}</td>
-          <td class="px-4 py-2 ${debtTuan < 0 ? 'text-red-500' : 'text-green-600'}">${tuanStatus}</td>
-          <td class="px-4 py-2 text-green-700 cursor-pointer underline" onclick="showDetail(${i}, 'thai')">${formatMoney(share.thai)}</td>
+          <td class="px-4 py-2">${tuanStatus}</td>
+          <td class="px-4 py-2 text-green-700 cursor-pointer underline" onclick="alert('Phòng: ${formatMoney(e.room)}\nĐiện: ${formatMoney(e.electricity)}\nNước: ${formatMoney(e.water)}\nWifi: ${formatMoney(e.wifi)}\n\nTổng chia Thái: ${formatMoney(share.thai)}')">${formatMoney(share.thai)}</td>
           <td class="px-4 py-2">${formatMoney(paidThai)}</td>
-          <td class="px-4 py-2 ${debtThai < 0 ? 'text-red-500' : 'text-green-600'}">${thaiStatus}</td>
+          <td class="px-4 py-2">${thaiStatus}</td>
           <td class="px-4 py-2 text-center">
             ${isKtxPaid ? `<label><input type="checkbox" onchange="toggleKtxPaid(${i}, this.checked)" ${e.ktxConfirmed ? 'checked' : ''}> Đã đóng</label>` : '<span class="text-red-500">Chưa đủ</span>'}
           </td>
           <td class="px-4 py-2 space-y-1 flex flex-col gap-2">
             <button onclick="addPayment(${i}, 'tuan')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 text-xs rounded">+ Tuấn</button>
             <button onclick="addPayment(${i}, 'thai')" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 text-xs rounded">+ Thái</button>
-            <button onclick="addOther(${i})" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 text-xs rounded">+ Khác</button>
             <button onclick="deleteExpense(${i})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 text-xs rounded">Xóa</button>
             <button onclick="exportMonth(${i})" class="bg-indigo-500 hover:bg-indigo-600 text-white px-2 py-1 text-xs rounded">Xuất Excel</button>
           </td>
         `;
         list.appendChild(tr);
       });
-    }
+    };
 
-    function exportMonth(index) {
-      const e = expenses[index];
-      const share = calculateShares(e);
-      const data = [
-        ['Tháng', e.month],
-        ['Phòng', e.room],
-        ['Điện', e.electricity],
-        ['Nước', e.water],
-        ['Wifi', e.wifi],
-        ...(e.extras || []).map(item => [item.name, item.amount]),
-        ['Tổng cộng', e.room + e.electricity + e.water + e.wifi + (e.extras || []).reduce((s, x) => s + x.amount, 0)],
-        [],
-        ['Tuấn phải trả', share.tuan],
-        ['Tuấn đã trả', e.paidTuan],
-        ['Thái phải trả', share.thai],
-        ['Thái đã trả', e.paidThai]
-      ];
-
-      const ws = XLSX.utils.aoa_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Chi phí tháng");
-      XLSX.writeFile(wb, `ChiPhi_KTX_${e.month}.xlsx`);
-    }
-
-    function exportAll() {
-      const data = [];
-      expenses.forEach((e, i) => {
-        const share = calculateShares(e);
-        const extras = (e.extras || []).map(item => `${item.name}: ${item.amount}`).join('; ');
-        data.push({
-          "Tháng": e.month,
-          "Phòng": e.room,
-          "Điện": e.electricity,
-          "Nước": e.water,
-          "Wifi": e.wifi,
-          "Chi phí khác": extras,
-          "Tổng cộng": e.room + e.electricity + e.water + e.wifi + (e.extras || []).reduce((s, x) => s + x.amount, 0),
-          "Tuấn phải trả": share.tuan,
-          "Tuấn đã trả": e.paidTuan,
-          "Thái phải trả": share.thai,
-          "Thái đã trả": e.paidThai
-        });
-      });
-
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Tất cả các tháng");
-      XLSX.writeFile(wb, "TongHop_ChiPhi_KTX.xlsx");
-    }
-
-    function addOther(index) {
-      const name = prompt('Nhập tên chi phí khác:');
-      const amount = prompt(`Nhập số tiền cho ${name}:`);
-      const num = parseInt(amount);
-      if (name && !isNaN(num)) {
-        expenses[index].extras = expenses[index].extras || [];
-        expenses[index].extras.push({ name, amount: num });
-        localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
-        renderExpenses();
-      }
-    }
+    document.getElementById('expense-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newE = {
+        month: document.getElementById('month').value,
+        room: +document.getElementById('room').value || 0,
+        electricity: +document.getElementById('electricity').value || 0,
+        water: +document.getElementById('water').value || 0,
+        wifi: +document.getElementById('wifi').value || 0,
+        paidTuan: 0,
+        paidThai: 0,
+        ktxConfirmed: false
+      };
+      expenses.push(newE);
+      localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
+      sendToGoogleSheet(newE);
+      e.target.reset();
+      renderExpenses();
+    });
 
     function addPayment(index, who) {
       const amount = prompt(`Nhập số tiền ${who === 'tuan' ? 'Tuấn' : 'Thái'} đã trả thêm:`);
       const num = parseInt(amount);
       if (!isNaN(num)) {
-        const key = `paid${who.charAt(0).toUpperCase() + who.slice(1)}`;
-        expenses[index][key] = (expenses[index][key] || 0) + num;
+        expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] = (expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] || 0) + num;
         localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
         renderExpenses();
       }
@@ -235,24 +162,48 @@
       }
     }
 
-    document.getElementById('expense-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newE = {
-        month: document.getElementById('month').value,
-        room: +document.getElementById('room').value || 0,
-        electricity: +document.getElementById('electricity').value || 0,
-        water: +document.getElementById('water').value || 0,
-        wifi: +document.getElementById('wifi').value || 0,
-        extras: [],
-        paidTuan: 0,
-        paidThai: 0,
-        ktxConfirmed: false
-      };
-      expenses.push(newE);
-      localStorage.setItem('ktx_expenses', JSON.stringify(expenses));
-      e.target.reset();
-      renderExpenses();
-    });
+    function exportMonth(index) {
+      const e = expenses[index];
+      const share = calculateShares(e);
+      const data = [
+        ['Tháng', e.month],
+        ['Phòng', e.room],
+        ['Điện', e.electricity],
+        ['Nước', e.water],
+        ['Wifi', e.wifi],
+        ['Tổng cộng', e.room + e.electricity + e.water + e.wifi],
+        [],
+        ['Tuấn phải trả', share.tuan],
+        ['Tuấn đã trả', e.paidTuan],
+        ['Thái phải trả', share.thai],
+        ['Thái đã trả', e.paidThai]
+      ];
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Chi phí tháng");
+      XLSX.writeFile(wb, `ChiPhi_KTX_${e.month}.xlsx`);
+    }
+
+    function exportAll() {
+      const data = expenses.map(e => {
+        const share = calculateShares(e);
+        return {
+          "Tháng": e.month,
+          "Phòng": e.room,
+          "Điện": e.electricity,
+          "Nước": e.water,
+          "Wifi": e.wifi,
+          "Tuấn phải trả": share.tuan,
+          "Tuấn đã trả": e.paidTuan,
+          "Thái phải trả": share.thai,
+          "Thái đã trả": e.paidThai
+        };
+      });
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Tất cả các tháng");
+      XLSX.writeFile(wb, "TongHop_ChiPhi_KTX.xlsx");
+    }
 
     renderExpenses();
   </script>
