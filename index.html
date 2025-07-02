@@ -17,31 +17,33 @@
     <section class="bg-white rounded-xl shadow-md p-6 mb-8">
       <h3 class="text-2xl font-semibold mb-4 text-gray-800">➕ Thêm chi phí</h3>
       <form id="expense-form" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-        <input type="month" id="month" class="col-span-2 px-3 py-2 border border-gray-300 rounded-md" required />
-        <input type="number" id="room" placeholder="Phòng" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
-        <input type="number" id="electricity" placeholder="Điện" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
-        <input type="number" id="water" placeholder="Nước" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
-        <input type="number" id="wifi" placeholder="Wifi" class="px-3 py-2 border border-gray-300 rounded-md" min="0" />
-        <button type="submit" class="col-span-2 lg:col-span-6 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Thêm chi phí</button>
+        <input type="month" id="month" class="col-span-2 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" required aria-label="Chọn tháng" />
+        <input type="number" id="room" placeholder="Phòng" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" aria-label="Chi phí phòng" />
+        <input type="number" id="electricity" placeholder="Điện" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" aria-label="Chi phí điện" />
+        <input type="number" id="water" placeholder="Nước" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" aria-label="Chi phí nước" />
+        <input type="number" id="wifi" placeholder="Wifi" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" aria-label="Chi phí wifi" />
+        <input type="number" id="extra" placeholder="Phát sinh" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" aria-label="Chi phí phát sinh" />
+        <button type="submit" class="col-span-2 lg:col-span-6 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">Thêm chi phí</button>
       </form>
     </section>
 
     <section class="bg-white rounded-xl shadow-md p-6">
       <h3 class="text-2xl font-semibold mb-4">📜 Lịch sử chi phí</h3>
       <div class="overflow-x-auto">
-        <table class="min-w-full text-sm">
+        <table class="min-w-full text-sm" role="table" aria-label="Bảng chi phí ký túc xá">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-4 py-2">Tháng</th>
-              <th class="px-4 py-2">Tổng</th>
-              <th class="px-4 py-2">Tuấn phải trả</th>
-              <th class="px-4 py-2">Tuấn đã trả</th>
-              <th class="px-4 py-2">Tuấn trạng thái</th>
-              <th class="px-4 py-2">Thái phải trả</th>
-              <th class="px-4 py-2">Thái đã trả</th>
-              <th class="px-4 py-2">Thái trạng thái</th>
-              <th class="px-4 py-2">Đóng KTX</th>
-              <th class="px-4 py-2">Hành động</th>
+              <th class="px-4 py-2 text-left" scope="col">Tháng</th>
+              <th class="px-4 py-2 text-left" scope="col">Tổng chi phí</th>
+              <th class="px-4 py-2 text-left" scope="col">Phát sinh</th>
+              <th class="px-4 py-2 text-left" scope="col">Tuấn phải trả</th>
+              <th class="px-4 py-2 text-left" scope="col">Tuấn đã trả</th>
+              <th class="px-4 py-2 text-left" scope="col">Trạng thái Tuấn</th>
+              <th class="px-4 py-2 text-left" scope="col">Thái phải trả</th>
+              <th class="px-4 py-2 text-left" scope="col">Thái đã trả</th>
+              <th class="px-4 py-2 text-left" scope="col">Trạng thái Thái</th>
+              <th class="px-4 py-2 text-left" scope="col">Trạng thái KTX</th>
+              <th class="px-4 py-2 text-left" scope="col">Hành động</th>
             </tr>
           </thead>
           <tbody id="expense-list"></tbody>
@@ -50,132 +52,725 @@
     </section>
 
     <div class="mt-6 text-right">
-      <button onclick="exportAll()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">📁 Xuất toàn bộ chi phí</button>
+      <button onclick="exportAll()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">📁 Xuất toàn bộ chi phí</button>
+    </div>
+
+    <!-- Data Summary Section -->
+    <section class="bg-white rounded-xl shadow-md p-6 mt-6">
+      <h3 class="text-2xl font-semibold mb-4">📊 Tổng kết chi phí</h3>
+      <div id="summary-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Summary will be populated by JavaScript -->
+      </div>
+    </section>
+
+    <!-- Data Management Section -->
+    <section class="bg-white rounded-xl shadow-md p-6 mt-6">
+      <h3 class="text-2xl font-semibold mb-4">🔧 Quản lý dữ liệu</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <button onclick="exportData()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">
+          📤 Xuất dữ liệu JSON
+        </button>
+        <button onclick="importData()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">
+          📥 Nhập dữ liệu JSON
+        </button>
+        <button onclick="showDataCode()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition">
+          📋 Xem mã dữ liệu
+        </button>
+        <button onclick="clearAllData()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition">
+          🗑️ Xóa tất cả dữ liệu
+        </button>
+      </div>
+    </section>
+
+    <!-- Google Sheets Integration Section -->
+    <section class="bg-white rounded-xl shadow-md p-6 mt-6">
+      <h3 class="text-2xl font-semibold mb-4">☁️ Đồng bộ Google Sheets</h3>
+      <div class="mb-4">
+        <label for="sheet-script-url" class="block text-sm font-medium mb-2">🔗 Link Google Apps Script Web App:</label>
+        <div class="flex space-x-2">
+          <input type="url" id="sheet-script-url" placeholder="https://script.google.com/macros/s/....../exec" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          <button onclick="saveSheetScriptUrl()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">💾 Lưu</button>
+        </div>
+        <p class="text-xs text-gray-600 mt-1">Link này sẽ được lưu trong trình duyệt của bạn và dùng cho cả lưu & tải dữ liệu.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <button onclick="saveToSheet()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">☁️ Lưu lên Google Sheets</button>
+        <button onclick="loadFromSheet()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">📥 Tải từ Google Sheets</button>
+      </div>
+      <div class="mt-4 text-xs text-gray-500">Nếu Google Sheets không hoạt động, dữ liệu vẫn được lưu trữ tạm thời trên trình duyệt của bạn (localStorage).</div>
+    </section>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
+      <h3 class="text-xl font-semibold mb-4">✏️ Sửa chi phí</h3>
+      <form id="edit-form" class="space-y-4">
+        <div>
+          <label for="edit-room" class="block text-sm font-medium mb-1">Phòng:</label>
+          <input type="number" id="edit-room" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" required />
+        </div>
+        <div>
+          <label for="edit-electricity" class="block text-sm font-medium mb-1">Điện:</label>
+          <input type="number" id="edit-electricity" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" required />
+        </div>
+        <div>
+          <label for="edit-water" class="block text-sm font-medium mb-1">Nước:</label>
+          <input type="number" id="edit-water" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" required />
+        </div>
+        <div>
+          <label for="edit-wifi" class="block text-sm font-medium mb-1">Wifi:</label>
+          <input type="number" id="edit-wifi" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" required />
+        </div>
+        <div>
+          <label for="edit-extra" class="block text-sm font-medium mb-1">Phát sinh:</label>
+          <input type="number" id="edit-extra" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" required />
+        </div>
+        <div class="flex space-x-3 pt-4">
+          <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">Lưu</button>
+          <button type="button" onclick="closeEditModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4">
+      <h3 class="text-xl font-semibold mb-4">💰 Thêm thanh toán</h3>
+      <form id="payment-form" class="space-y-4">
+        <div>
+          <label for="payment-amount" class="block text-sm font-medium mb-1">Số tiền:</label>
+          <input type="number" id="payment-amount" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" min="0" max="10000000" step="1000" required />
+        </div>
+        <div class="flex space-x-3 pt-4">
+          <button type="submit" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">Thêm</button>
+          <button type="button" onclick="closePaymentModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg hidden z-50" role="alert" aria-live="polite"></div>
+
+  <!-- Data Code Modal -->
+  <div id="data-code-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+      <h3 class="text-xl font-semibold mb-4">📋 Mã dữ liệu</h3>
+      <p class="text-sm text-gray-600 mb-4">Sao chép mã này để chia sẻ hoặc lưu trữ dữ liệu:</p>
+      <textarea id="data-code" class="w-full h-64 p-3 border border-gray-300 rounded-md font-mono text-sm" readonly></textarea>
+      <div class="flex space-x-3 pt-4">
+        <button onclick="copyDataCode()" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">📋 Sao chép</button>
+        <button onclick="closeDataCodeModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Modal -->
+  <div id="import-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
+      <h3 class="text-xl font-semibold mb-4">📥 Nhập dữ liệu</h3>
+      <p class="text-sm text-gray-600 mb-4">Dán mã JSON vào ô bên dưới:</p>
+      <textarea id="import-data" class="w-full h-32 p-3 border border-gray-300 rounded-md font-mono text-sm" placeholder='[{"month":"2024-01","room":1000000,"electricity":200000,"water":50000,"wifi":300000,"extra":0,"paidTuan":0,"paidThai":0}]'></textarea>
+      <div class="flex space-x-3 pt-4">
+        <button onclick="confirmImport()" class="flex-1 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">Nhập</button>
+        <button onclick="closeImportModal()" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition">Hủy</button>
+      </div>
     </div>
   </div>
 
   <script>
     const expenses = [];
+    const PEOPLE_IN_ROOM = 2;
+    const PEOPLE_SHARE_WIFI = 6;
+    let currentEditIndex = -1;
+    let currentPaymentPerson = '';
+
+    // Utility functions
+    const showToast = (msg, type = 'success') => {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.className = `fixed top-4 right-4 px-4 py-2 rounded shadow-lg z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white`;
+      toast.classList.remove("hidden");
+      toast.setAttribute('aria-live', 'polite');
+      setTimeout(() => toast.classList.add("hidden"), 3000);
+    };
 
     const formatMoney = (amount) =>
-      new Intl.NumberFormat('vi-VN').format(amount) + 'đ';
+      new Intl.NumberFormat("vi-VN").format(amount) + "đ";
+
+    const validateAmount = (value) => {
+      const num = parseFloat(value);
+      return !isNaN(num) && num >= 0 && num <= 10000000;
+    };
 
     const calculateShares = (e) => {
-      const wifiPerPerson = e.wifi / 6;
-      const shared = (e.room + e.electricity + e.water) / 2;
+      const wifiPerPerson = e.wifi / PEOPLE_SHARE_WIFI;
+      const shared = (e.room + e.electricity + e.water + e.extra) / PEOPLE_IN_ROOM;
       return {
         tuan: wifiPerPerson + shared,
         thai: wifiPerPerson + shared,
       };
     };
 
-    function saveToLocal() {
-      localStorage.setItem("ktxExpenses", JSON.stringify(expenses));
+    // Modal functions
+    const showEditModal = (index) => {
+      const expense = expenses[index];
+      currentEditIndex = index;
+      
+      document.getElementById('edit-room').value = expense.room;
+      document.getElementById('edit-electricity').value = expense.electricity;
+      document.getElementById('edit-water').value = expense.water;
+      document.getElementById('edit-wifi').value = expense.wifi;
+      document.getElementById('edit-extra').value = expense.extra;
+      
+      document.getElementById('edit-modal').classList.remove('hidden');
+      document.getElementById('edit-room').focus();
+    };
+
+    const closeEditModal = () => {
+      document.getElementById('edit-modal').classList.add('hidden');
+      currentEditIndex = -1;
+    };
+
+    const showPaymentModal = (index, person) => {
+      currentEditIndex = index;
+      currentPaymentPerson = person;
+      document.getElementById('payment-modal').classList.remove('hidden');
+      document.getElementById('payment-amount').focus();
+    };
+
+    const closePaymentModal = () => {
+      document.getElementById('payment-modal').classList.add('hidden');
+      currentEditIndex = -1;
+      currentPaymentPerson = '';
+    };
+
+    // Google Sheets Integration with Configurable URL and Fallback
+    let sheetScriptUrl = localStorage.getItem('sheetScriptUrl') || '';
+
+    function saveSheetScriptUrl() {
+      const url = document.getElementById('sheet-script-url').value.trim();
+      if (!url || !url.startsWith('https://script.google.com/macros/s/')) {
+        showToast('Vui lòng nhập đúng link Google Apps Script Web App!', 'error');
+        return;
+      }
+      sheetScriptUrl = url;
+      localStorage.setItem('sheetScriptUrl', url);
+      showToast('✅ Đã lưu link Google Apps Script!');
     }
 
-    function loadFromLocal() {
-      const data = localStorage.getItem("ktxExpenses");
-      if (data) {
-        expenses.push(...JSON.parse(data));
-        renderExpenses();
+    document.addEventListener('DOMContentLoaded', function() {
+      if (sheetScriptUrl) {
+        document.getElementById('sheet-script-url').value = sheetScriptUrl;
+      }
+    });
+
+    function saveToSheet() {
+      if (!sheetScriptUrl) {
+        showToast('Vui lòng nhập link Google Apps Script!', 'error');
+        return;
+      }
+      fetch(sheetScriptUrl, {
+        method: 'POST',
+        body: JSON.stringify(expenses),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(res => res.text())
+        .then(text => {
+          showToast('✅ Đã lưu lên Google Sheets!');
+          // Always backup to localStorage
+          saveToLocal();
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('❌ Lỗi khi lưu lên Google Sheets! Đã lưu tạm vào trình duyệt.', 'error');
+          saveToLocal();
+        });
+    }
+
+    function loadFromSheet() {
+      if (!sheetScriptUrl) {
+        showToast('Vui lòng nhập link Google Apps Script!', 'error');
+        return;
+      }
+      fetch(sheetScriptUrl)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            const valid = data.every(item =>
+              item['Tháng'] &&
+              !isNaN(parseFloat(item['Phòng'])) &&
+              !isNaN(parseFloat(item['Điện'])) &&
+              !isNaN(parseFloat(item['Nước'])) &&
+              !isNaN(parseFloat(item['Wifi'])) &&
+              !isNaN(parseFloat(item['Phát sinh'])) &&
+              !isNaN(parseFloat(item['Tuấn đã trả'])) &&
+              !isNaN(parseFloat(item['Thái đã trả']))
+            );
+            if (!valid) {
+              showToast('❌ Dữ liệu Google Sheets không hợp lệ!', 'error');
+              return;
+            }
+            expenses.length = 0;
+            data.forEach(item => {
+              expenses.push({
+                month: item['Tháng'],
+                room: parseFloat(item['Phòng']),
+                electricity: parseFloat(item['Điện']),
+                water: parseFloat(item['Nước']),
+                wifi: parseFloat(item['Wifi']),
+                extra: parseFloat(item['Phát sinh']),
+                paidTuan: parseFloat(item['Tuấn đã trả']),
+                paidThai: parseFloat(item['Thái đã trả']),
+              });
+            });
+            renderExpenses();
+            showToast('📥 Đã tải dữ liệu từ Google Sheets!');
+            saveToLocal(); // backup
+          } else {
+            showToast('❌ Dữ liệu Google Sheets không hợp lệ!', 'error');
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('❌ Lỗi khi tải dữ liệu từ Google Sheets! Đang tải dữ liệu tạm từ trình duyệt.', 'error');
+          loadFromLocal();
+        });
+    }
+
+    // LocalStorage fallback
+    function saveToLocal() {
+      try {
+        localStorage.setItem('ktxExpenses', JSON.stringify(expenses));
+      } catch (error) {
+        console.error('Error saving data:', error);
+        showToast('Lỗi khi lưu dữ liệu tạm!', 'error');
       }
     }
 
+    function loadFromLocal() {
+      try {
+        const data = localStorage.getItem('ktxExpenses');
+        if (data) {
+          const parsed = JSON.parse(data);
+          if (Array.isArray(parsed)) {
+            expenses.length = 0;
+            expenses.push(...parsed);
+            renderExpenses();
+            showToast('📥 Đã tải dữ liệu tạm từ trình duyệt!');
+          }
+        }
+      } catch (error) {
+        console.error('Error loading data:', error);
+        showToast('Lỗi khi tải dữ liệu tạm!', 'error');
+        localStorage.removeItem('ktxExpenses');
+      }
+    }
+
+    // Render functions
     const renderExpenses = () => {
-      const list = document.getElementById('expense-list');
-      list.innerHTML = '';
+      const list = document.getElementById("expense-list");
+      list.innerHTML = "";
+
+      if (expenses.length === 0) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = '<td colspan="11" class="px-4 py-8 text-center text-gray-500">Chưa có chi phí nào được thêm</td>';
+        list.appendChild(tr);
+        return;
+      }
 
       expenses.forEach((e, i) => {
-        const total = e.room + e.electricity + e.water + e.wifi;
+        const total = e.room + e.electricity + e.water + e.wifi + e.extra;
         const share = calculateShares(e);
         const debtTuan = e.paidTuan - share.tuan;
         const debtThai = e.paidThai - share.thai;
 
         const tuanStatus =
           debtTuan === 0
-            ? '✅'
+            ? "✅ Đã đóng"
             : debtTuan > 0
             ? `Dư ${formatMoney(debtTuan)}`
             : `Nợ ${formatMoney(-debtTuan)}`;
 
         const thaiStatus =
           debtThai === 0
-            ? '✅'
+            ? "✅ Đã đóng"
             : debtThai > 0
             ? `Dư ${formatMoney(debtThai)}`
             : `Nợ ${formatMoney(-debtThai)}`;
 
         const isKtxPaid = debtTuan >= 0 && debtThai >= 0;
+        const ktxStatus = isKtxPaid ? "✅ Đã đóng" : "❌ Chưa đóng";
 
-        const tr = document.createElement('tr');
+        const tr = document.createElement("tr");
+        tr.className = "border-b hover:bg-gray-50";
         tr.innerHTML = `
-          <td class="px-4 py-2">${e.month}</td>
+          <td class="px-4 py-2 font-medium">${e.month}</td>
           <td class="px-4 py-2">${formatMoney(total)}</td>
+          <td class="px-4 py-2">${formatMoney(e.extra)}</td>
           <td class="px-4 py-2">${formatMoney(share.tuan)}</td>
           <td class="px-4 py-2">${formatMoney(e.paidTuan)}</td>
-          <td class="px-4 py-2">${tuanStatus}</td>
+          <td class="px-4 py-2 ${debtTuan >= 0 ? 'text-green-600' : 'text-red-600'}">${tuanStatus}</td>
           <td class="px-4 py-2">${formatMoney(share.thai)}</td>
           <td class="px-4 py-2">${formatMoney(e.paidThai)}</td>
-          <td class="px-4 py-2">${thaiStatus}</td>
-          <td class="px-4 py-2">${isKtxPaid ? '✅' : '❌'}</td>
-          <td class="px-4 py-2 text-xs space-y-1">
-            <button onclick="addPayment(${i}, 'tuan')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded">+ Tuấn</button>
-            <button onclick="addPayment(${i}, 'thai')" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded">+ Thái</button>
+          <td class="px-4 py-2 ${debtThai >= 0 ? 'text-green-600' : 'text-red-600'}">${thaiStatus}</td>
+          <td class="px-4 py-2 ${isKtxPaid ? 'text-green-600' : 'text-red-600'}">${ktxStatus}</td>
+          <td class="px-4 py-2">
+            <div class="flex flex-col space-y-1">
+              <button onclick="showPaymentModal(${i}, 'tuan')" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs transition">+ Tuấn</button>
+              <button onclick="showPaymentModal(${i}, 'thai')" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs transition">+ Thái</button>
+              <button onclick="showEditModal(${i})" class="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded text-xs transition">✏️ Sửa</button>
+              <button onclick="deleteExpense(${i})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs transition">🗑️ Xoá</button>
+            </div>
           </td>
         `;
         list.appendChild(tr);
       });
     };
 
-    document.getElementById('expense-form').addEventListener('submit', (e) => {
+    // Event listeners
+    document.getElementById("expense-form").addEventListener("submit", (e) => {
       e.preventDefault();
-      const newE = {
-        month: document.getElementById('month').value,
-        room: +document.getElementById('room').value || 0,
-        electricity: +document.getElementById('electricity').value || 0,
-        water: +document.getElementById('water').value || 0,
-        wifi: +document.getElementById('wifi').value || 0,
-        paidTuan: 0,
-        paidThai: 0,
-        ktxConfirmed: false,
-      };
-      expenses.push(newE);
+      
+      const month = document.getElementById("month").value;
+      const room = parseFloat(document.getElementById("room").value) || 0;
+      const electricity = parseFloat(document.getElementById("electricity").value) || 0;
+      const water = parseFloat(document.getElementById("water").value) || 0;
+      const wifi = parseFloat(document.getElementById("wifi").value) || 0;
+      const extra = parseFloat(document.getElementById("extra").value) || 0;
+
+      // Validation
+      if (!month) {
+        showToast("Vui lòng chọn tháng", 'error');
+        return;
+      }
+
+      if (room + electricity + water + wifi + extra === 0) {
+        showToast("Vui lòng nhập ít nhất một khoản chi", 'error');
+        return;
+      }
+
+      if (!validateAmount(room) || !validateAmount(electricity) || !validateAmount(water) || !validateAmount(wifi) || !validateAmount(extra)) {
+        showToast("Số tiền không hợp lệ (0 - 10,000,000 VND)", 'error');
+        return;
+      }
+
+      if (expenses.find(e => e.month === month)) {
+        showToast("Tháng này đã tồn tại!", 'error');
+        return;
+      }
+
+      expenses.push({ month, room, electricity, water, wifi, extra, paidTuan: 0, paidThai: 0 });
       saveToLocal();
       renderExpenses();
+      showToast("✅ Đã thêm chi phí!");
       e.target.reset();
     });
 
-    function addPayment(index, who) {
-      const amount = prompt(`Nhập số tiền ${who === 'tuan' ? 'Tuấn' : 'Thái'} đã trả thêm:`);
-      const num = parseInt(amount);
-      if (!isNaN(num)) {
-        expenses[index][`paid${who.charAt(0).toUpperCase() + who.slice(1)}`] += num;
+    document.getElementById("edit-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      if (currentEditIndex === -1) return;
+
+      const room = parseFloat(document.getElementById("edit-room").value) || 0;
+      const electricity = parseFloat(document.getElementById("edit-electricity").value) || 0;
+      const water = parseFloat(document.getElementById("edit-water").value) || 0;
+      const wifi = parseFloat(document.getElementById("edit-wifi").value) || 0;
+      const extra = parseFloat(document.getElementById("edit-extra").value) || 0;
+
+      if (!validateAmount(room) || !validateAmount(electricity) || !validateAmount(water) || !validateAmount(wifi) || !validateAmount(extra)) {
+        showToast("Số tiền không hợp lệ (0 - 10,000,000 VND)", 'error');
+        return;
+      }
+
+      const expense = expenses[currentEditIndex];
+      expense.room = room;
+      expense.electricity = electricity;
+      expense.water = water;
+      expense.wifi = wifi;
+      expense.extra = extra;
+
+      saveToLocal();
+      renderExpenses();
+      showToast("📝 Đã sửa chi phí.");
+      closeEditModal();
+    });
+
+    document.getElementById("payment-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      
+      if (currentEditIndex === -1 || !currentPaymentPerson) return;
+
+      const amount = parseFloat(document.getElementById("payment-amount").value) || 0;
+
+      if (!validateAmount(amount)) {
+        showToast("Số tiền không hợp lệ (0 - 10,000,000 VND)", 'error');
+        return;
+      }
+
+      const key = currentPaymentPerson === "tuan" ? "paidTuan" : "paidThai";
+      const label = currentPaymentPerson === "tuan" ? "Tuấn" : "Thái";
+      
+      expenses[currentEditIndex][key] += amount;
+      saveToLocal();
+      renderExpenses();
+      showToast(`💰 ${label} đã trả thêm ${formatMoney(amount)}`);
+      closePaymentModal();
+    });
+
+    function deleteExpense(index) {
+      if (confirm("Bạn có chắc muốn xoá tháng này?")) {
+        expenses.splice(index, 1);
         saveToLocal();
         renderExpenses();
+        showToast("🗑️ Đã xoá thành công.");
       }
     }
 
     function exportAll() {
-      const data = expenses.map(e => {
-        const share = calculateShares(e);
-        return {
-          "Tháng": e.month,
-          "Phòng": e.room,
-          "Điện": e.electricity,
-          "Nước": e.water,
-          "Wifi": e.wifi,
-          "Tuấn phải trả": share.tuan,
-          "Tuấn đã trả": e.paidTuan,
-          "Thái phải trả": share.thai,
-          "Thái đã trả": e.paidThai
-        };
-      });
-      const ws = XLSX.utils.json_to_sheet(data);
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Tất cả các tháng");
-      XLSX.writeFile(wb, "TongHop_ChiPhi_KTX.xlsx");
+      try {
+        const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const data = expenses.map(e => {
+          const share = calculateShares(e);
+          return {
+            "Tháng": e.month,
+            "Phòng": e.room,
+            "Điện": e.electricity,
+            "Nước": e.water,
+            "Wifi": e.wifi,
+            "Phát sinh": e.extra,
+            "Tổng chi phí": e.room + e.electricity + e.water + e.wifi + e.extra,
+            "Tuấn phải trả": share.tuan,
+            "Tuấn đã trả": e.paidTuan,
+            "Thái phải trả": share.thai,
+            "Thái đã trả": e.paidThai,
+          };
+        });
+        
+        if (data.length === 0) {
+          showToast("Không có dữ liệu để xuất", 'error');
+          return;
+        }
+
+        const ws = XLSX.utils.json_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Tổng hợp");
+        XLSX.writeFile(wb, `ChiPhiKTX_${today}.xlsx`);
+        showToast("📁 Đã xuất file Excel thành công!");
+      } catch (error) {
+        console.error("Error exporting:", error);
+        showToast("Lỗi khi xuất file", 'error');
+      }
     }
 
+    // Close modals when clicking outside
+    document.getElementById('edit-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'edit-modal') {
+        closeEditModal();
+      }
+    });
+
+    document.getElementById('payment-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'payment-modal') {
+        closePaymentModal();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeEditModal();
+        closePaymentModal();
+      }
+    });
+
+    // Data management functions
+    function updateSummary() {
+      const summaryContent = document.getElementById('summary-content');
+      
+      if (expenses.length === 0) {
+        summaryContent.innerHTML = '<div class="col-span-full text-center text-gray-500 py-8">Chưa có dữ liệu chi phí</div>';
+        return;
+      }
+
+      const totalExpenses = expenses.reduce((sum, e) => sum + e.room + e.electricity + e.water + e.wifi + e.extra, 0);
+      const totalPaidTuan = expenses.reduce((sum, e) => sum + e.paidTuan, 0);
+      const totalPaidThai = expenses.reduce((sum, e) => sum + e.paidThai, 0);
+      
+      const totalShared = expenses.reduce((sum, e) => {
+        const share = calculateShares(e);
+        return sum + share.tuan + share.thai;
+      }, 0);
+
+      const debtTuan = totalPaidTuan - (totalShared / 2);
+      const debtThai = totalPaidThai - (totalShared / 2);
+
+      summaryContent.innerHTML = `
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <h4 class="font-semibold text-blue-800 mb-2">💰 Tổng chi phí</h4>
+          <p class="text-2xl font-bold text-blue-600">${formatMoney(totalExpenses)}</p>
+          <p class="text-sm text-blue-600">${expenses.length} tháng</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+          <h4 class="font-semibold text-green-800 mb-2">💳 Tuấn đã trả</h4>
+          <p class="text-2xl font-bold text-green-600">${formatMoney(totalPaidTuan)}</p>
+          <p class="text-sm ${debtTuan >= 0 ? 'text-green-600' : 'text-red-600'}">
+            ${debtTuan >= 0 ? 'Dư ' + formatMoney(debtTuan) : 'Nợ ' + formatMoney(-debtTuan)}
+          </p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+          <h4 class="font-semibold text-purple-800 mb-2">💳 Thái đã trả</h4>
+          <p class="text-2xl font-bold text-purple-600">${formatMoney(totalPaidThai)}</p>
+          <p class="text-sm ${debtThai >= 0 ? 'text-green-600' : 'text-red-600'}">
+            ${debtThai >= 0 ? 'Dư ' + formatMoney(debtThai) : 'Nợ ' + formatMoney(-debtThai)}
+          </p>
+        </div>
+        <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+          <h4 class="font-semibold text-orange-800 mb-2">📊 Trạng thái</h4>
+          <p class="text-lg font-bold ${(debtTuan >= 0 && debtThai >= 0) ? 'text-green-600' : 'text-red-600'}">
+            ${(debtTuan >= 0 && debtThai >= 0) ? '✅ Đã hoàn thành' : '❌ Chưa hoàn thành'}
+          </p>
+          <p class="text-sm text-orange-600">Cập nhật lần cuối: ${new Date().toLocaleDateString('vi-VN')}</p>
+        </div>
+      `;
+    }
+
+    function exportData() {
+      try {
+        const data = JSON.stringify(expenses, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ktx_data_${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("📤 Đã xuất dữ liệu JSON thành công!");
+      } catch (error) {
+        console.error("Error exporting data:", error);
+        showToast("Lỗi khi xuất dữ liệu", 'error');
+      }
+    }
+
+    function importData() {
+      document.getElementById('import-modal').classList.remove('hidden');
+      document.getElementById('import-data').focus();
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+      document.getElementById('import-data').value = '';
+    }
+
+    function confirmImport() {
+      try {
+        const importText = document.getElementById('import-data').value.trim();
+        if (!importText) {
+          showToast("Vui lòng nhập dữ liệu", 'error');
+          return;
+        }
+
+        const importedData = JSON.parse(importText);
+        if (!Array.isArray(importedData)) {
+          showToast("Dữ liệu không đúng định dạng", 'error');
+          return;
+        }
+
+        // Validate imported data structure
+        const isValid = importedData.every(item => 
+          item.month && 
+          typeof item.room === 'number' &&
+          typeof item.electricity === 'number' &&
+          typeof item.water === 'number' &&
+          typeof item.wifi === 'number' &&
+          typeof item.extra === 'number' &&
+          typeof item.paidTuan === 'number' &&
+          typeof item.paidThai === 'number'
+        );
+
+        if (!isValid) {
+          showToast("Dữ liệu không hợp lệ", 'error');
+          return;
+        }
+
+        if (confirm(`Bạn có chắc muốn nhập ${importedData.length} bản ghi? Dữ liệu hiện tại sẽ bị ghi đè.`)) {
+          expenses.length = 0; // Clear current data
+          expenses.push(...importedData);
+          saveToLocal();
+          renderExpenses();
+          updateSummary();
+          closeImportModal();
+          showToast(`📥 Đã nhập ${importedData.length} bản ghi thành công!`);
+        }
+      } catch (error) {
+        console.error("Error importing data:", error);
+        showToast("Lỗi khi nhập dữ liệu", 'error');
+      }
+    }
+
+    function showDataCode() {
+      const dataCode = JSON.stringify(expenses, null, 2);
+      document.getElementById('data-code').value = dataCode;
+      document.getElementById('data-code-modal').classList.remove('hidden');
+    }
+
+    function closeDataCodeModal() {
+      document.getElementById('data-code-modal').classList.add('hidden');
+    }
+
+    function copyDataCode() {
+      const dataCode = document.getElementById('data-code');
+      dataCode.select();
+      dataCode.setSelectionRange(0, 99999); // For mobile devices
+      
+      try {
+        document.execCommand('copy');
+        showToast("📋 Đã sao chép mã dữ liệu!");
+      } catch (error) {
+        // Fallback for modern browsers
+        navigator.clipboard.writeText(dataCode.value).then(() => {
+          showToast("📋 Đã sao chép mã dữ liệu!");
+        }).catch(() => {
+          showToast("Lỗi khi sao chép", 'error');
+        });
+      }
+    }
+
+    function clearAllData() {
+      if (confirm("Bạn có chắc muốn xóa TẤT CẢ dữ liệu? Hành động này không thể hoàn tác.")) {
+        expenses.length = 0;
+        localStorage.removeItem("ktxExpenses");
+        renderExpenses();
+        updateSummary();
+        showToast("🗑️ Đã xóa tất cả dữ liệu!");
+      }
+    }
+
+    // Close modals when clicking outside
+    document.getElementById('data-code-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'data-code-modal') {
+        closeDataCodeModal();
+      }
+    });
+
+    document.getElementById('import-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'import-modal') {
+        closeImportModal();
+      }
+    });
+
+    // Update summary when data changes
+    const originalRenderExpenses = renderExpenses;
+    renderExpenses = function() {
+      originalRenderExpenses();
+      updateSummary();
+    };
+
+    // Initialize
     loadFromLocal();
   </script>
 </body>
