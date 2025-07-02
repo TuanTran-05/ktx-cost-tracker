@@ -83,21 +83,56 @@
     </section>
 
     <!-- Google Sheets Integration Section -->
-    <section class="bg-white rounded-xl shadow-md p-6 mt-6">
-      <h3 class="text-2xl font-semibold mb-4">☁️ Đồng bộ Google Sheets</h3>
-      <div class="mb-4">
-        <label for="sheet-script-url" class="block text-sm font-medium mb-2">🔗 Link Google Apps Script Web App:</label>
-        <div class="flex space-x-2">
-          <input type="url" id="sheet-script-url" placeholder="https://script.google.com/macros/s/....../exec" class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
-          <button onclick="saveSheetScriptUrl()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">💾 Lưu</button>
+    <section class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl shadow-lg p-6 mt-6">
+      <div class="max-w-2xl mx-auto">
+        <h3 class="text-3xl font-bold mb-6 text-blue-700 flex items-center gap-2">
+          <span class="inline-block bg-white rounded-full p-2 shadow"><svg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 17v-2a4 4 0 014-4h6m-6 0V7a4 4 0 00-4-4H5a4 4 0 00-4 4v10a4 4 0 004 4h6a4 4 0 004-4z'/></svg></span>
+          Đồng bộ Google Sheets
+        </h3>
+        <!-- Step-by-step setup -->
+        <div class="bg-white rounded-lg shadow p-4 mb-6 border-l-4 border-blue-400">
+          <div class="flex items-center mb-2">
+            <span class="inline-block bg-blue-100 text-blue-600 rounded-full p-1 mr-2"><svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 8v4l3 3'/></svg></span>
+            <span class="font-semibold text-blue-700">Hướng dẫn thiết lập Google Sheets</span>
+          </div>
+          <ol class="list-decimal list-inside text-sm text-gray-700 space-y-1 pl-2">
+            <li>Tạo Google Sheets mới tại <a href="https://sheets.google.com" target="_blank" class="text-blue-600 hover:underline font-medium">sheets.google.com</a></li>
+            <li>Đặt tên sheet đầu tiên là <span class="font-semibold text-blue-700">KTX_Data</span></li>
+            <li>Thêm header: <span class="bg-blue-50 px-2 py-1 rounded text-xs font-mono border border-blue-200">Tháng,Phòng,Điện,Nước,Wifi,Phát sinh,Tuấn đã trả,Thái đã trả</span></li>
+            <li>Triển khai Google Apps Script Web App (xem <a href="https://developers.google.com/apps-script/guides/web" target="_blank" class="text-blue-600 hover:underline">hướng dẫn</a>)</li>
+            <li>Chia sẻ Web App ở chế độ <span class="font-semibold text-blue-700">Anyone</span> và copy link <span class="font-mono">/exec</span></li>
+            <li>Dán link vào ô bên dưới và nhấn <span class="font-semibold text-blue-700">Lưu</span></li>
+          </ol>
         </div>
-        <p class="text-xs text-gray-600 mt-1">Link này sẽ được lưu trong trình duyệt của bạn và dùng cho cả lưu & tải dữ liệu.</p>
+        <!-- Script URL input -->
+        <div class="flex flex-col md:flex-row items-center gap-3 mb-4">
+          <input type="url" id="sheet-script-url" placeholder="https://script.google.com/macros/s/....../exec" class="flex-1 px-4 py-2 border border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition" />
+          <button onclick="saveSheetScriptUrl()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold shadow transition focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 13l4 4L19 7'/></svg>
+            Lưu
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 mb-6">Link này sẽ được lưu trong trình duyệt của bạn và dùng cho cả lưu & tải dữ liệu.</p>
+        <!-- Action buttons -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <button onclick="saveToSheet()" class="flex items-center gap-2 justify-center bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white px-6 py-3 rounded-lg font-semibold shadow transition focus:ring-2 focus:ring-green-400 focus:ring-offset-2">
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4'/></svg>
+            Lưu lên Google Sheets
+          </button>
+          <button onclick="loadFromSheet()" class="flex items-center gap-2 justify-center bg-gradient-to-r from-blue-400 to-blue-600 hover:from-blue-500 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold shadow transition focus:ring-2 focus:ring-blue-400 focus:ring-offset-2">
+            <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 4v2a2 2 0 002 2h12a2 2 0 002-2V4M7 14l5-5m0 0l5 5m-5-5v12'/></svg>
+            Tải từ Google Sheets
+          </button>
+        </div>
+        <!-- Status bar -->
+        <div id="gs-status-bar" class="hidden mt-4">
+          <div class="flex items-center gap-2 bg-white border border-blue-200 rounded-lg px-4 py-2 shadow animate-pulse">
+            <svg id="gs-status-spinner" class="h-5 w-5 text-blue-500 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+            <span id="gs-status-text" class="text-blue-700 font-medium">Đang đồng bộ...</span>
+          </div>
+        </div>
+        <div class="mt-4 text-xs text-gray-500 text-center">Nếu Google Sheets không hoạt động, dữ liệu vẫn được lưu trữ tạm thời trên trình duyệt của bạn (localStorage).</div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <button onclick="saveToSheet()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition">☁️ Lưu lên Google Sheets</button>
-        <button onclick="loadFromSheet()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition">📥 Tải từ Google Sheets</button>
-      </div>
-      <div class="mt-4 text-xs text-gray-500">Nếu Google Sheets không hoạt động, dữ liệu vẫn được lưu trữ tạm thời trên trình duyệt của bạn (localStorage).</div>
     </section>
   </div>
 
@@ -269,7 +304,7 @@
 
     function saveToSheet() {
       if (!sheetScriptUrl) {
-        showToast('Vui lòng nhập link Google Apps Script!', 'error');
+        showToast('https://script.google.com/macros/s/AKfycby38f7srI89aQOGhCbOopaA0HU1M2Y1YBX5CnaTbwMPOT9jbDg2DBi-QcLmfXU2aXTM/exec', 'error');
         return;
       }
       fetch(sheetScriptUrl, {
@@ -772,6 +807,21 @@
 
     // Initialize
     loadFromLocal();
+
+    // --- Google Sheets Integration with beautiful status bar ---
+    function showGSStatusBar(message, show = true) {
+      const bar = document.getElementById('gs-status-bar');
+      const text = document.getElementById('gs-status-text');
+      const spinner = document.getElementById('gs-status-spinner');
+      if (show) {
+        bar.classList.remove('hidden');
+        text.textContent = message;
+        spinner.classList.remove('hidden');
+      } else {
+        bar.classList.add('hidden');
+        spinner.classList.add('hidden');
+      }
+    }
   </script>
 </body>
 </html>
